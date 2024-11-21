@@ -70,6 +70,14 @@ library(GGally)
 
 rq_1 <- subset(data, select = c(Weight, Workout_Frequency, Workout_Type, Calories_Burned, Height, Avg_BPM, Fat_Percentage))
 ggpairs(rq_1, lower = list(combo = "box_no_facet"))
+
+boxplot(data$Weight ~ data$Workout_Frequency)
+boxplot(data$Weight ~ data$Workout_Type)
+plot(data$Calories_Burned, data$Weight)
+plot(data$Height, data$Weight)
+plot(data$Avg_BPM, data$Weight)
+plot(data$Fat_Percentage, data$Weight)
+
 ```
 ```{r}
 # Visualizing Research Question 2
