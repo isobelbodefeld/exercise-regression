@@ -79,6 +79,9 @@ plot(data$Avg_BPM, data$Weight)
 plot(data$Fat_Percentage, data$Weight)
 
 ```
+
+From the visualizations, it seems that Height is the most highly correlated with Body Weight with a slightly positive relationship. Taller individuals tend to have larger skeletal frames and more body mass in general, which naturally contributes to a higher weight.
+
 ```{r}
 # Visualizing Research Question 2
 rq_2 <- subset(data, select = c(Calories_Burned, Session_Duration))
