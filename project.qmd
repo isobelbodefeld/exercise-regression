@@ -46,7 +46,7 @@ Predictors of Interest:
 
 ## Research Questions
 
-Can Body Weight(kg) be determined by Workout Frequency, Workout Type, Calories Burned per Workout, and Session Duration of the Workout?
+Can Body Weight(kg) be determined by Workout Frequency, Workout Type, Height, Calories Burned per Workout, and Avg BPM?
 
 Can the Calories Burned per Workout be predicted by the Session Duration of the Workout?
 
@@ -68,7 +68,7 @@ workout_type_counts
 # Visualizing Research Question 1
 library(GGally)
 
-rq_1 <- subset(data, select = c(Weight, Workout_Frequency, Workout_Type, Calories_Burned, Session_Duration))
+rq_1 <- subset(data, select = c(Weight, Workout_Frequency, Workout_Type, Calories_Burned, Height, Avg_BPM))
 ggpairs(rq_1, lower = list(combo = "box_no_facet"))
 ```
 ```{r}
