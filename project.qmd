@@ -72,15 +72,15 @@ rq_1 <- subset(data, select = c(Weight, Workout_Frequency, Workout_Type, Calorie
 ggpairs(rq_1, lower = list(combo = "box_no_facet"))
 ```
 ```{r}
-# Visualizing Research Question 1
-rq_2 <- subset(data, select = c(Weight, Workout_Frequency, Workout_Type, Calories_Burned, Session_Duration))
-ggpairs(rq_1, lower = list(combo = "box_no_facet"))
+# Visualizing Research Question 2
+rq_2 <- subset(data, select = c(Calories_Burned, Session_Duration))
+ggpairs(rq_2, lower = list(combo = "box_no_facet"))
 ```
 
 ```{r}
-# Visualizing Research Question 1
+# Visualizing Research Question 3
 rq_3 <- subset(data, select = c(Fat_Percentage, Experience_Level, Workout_Frequency, Water_Intake, Avg_BPM))
-ggpairs(rq_1, lower = list(combo = "box_no_facet"))
+ggpairs(rq_3, lower = list(combo = "box_no_facet"))
 ```
 ## Multiple Linear Regression Model
 
