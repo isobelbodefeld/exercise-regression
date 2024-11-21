@@ -1,12 +1,48 @@
 ---
-title: "Your Project Name Here"
-author: "Your Group Name Here"
+title: "Predicting Weight from Fitness Patterns"
+author: "Isobel Bodefeld, Michael Tao, Wei-jet Chiew"
 format: html
 ---
 
 ## Introduction
 
-(Your text here)
+We found our data on Kaggle from the author Vala Khorasani. According to Khorasani, this dataset was generated using simulated data based on "realistic gym exercise patterns." With 973 observations, this data is related to key performance indicators such as heart rate and calories burned along with information relating to demographics and experience levels.
+
+Outcome to predict: Weight (in kilograms)
+
+Predictors of Interest:
+
+-   Age (in years)
+
+-   Gender (Male or Female)
+
+-   Height (in meters)
+
+-   Avg_BPM (beats per minute during workout sessions)
+
+-   Session_Duration (duration of each workout session in hours)
+
+-   Calories_Burned (total calories burned during each session)
+
+-   Workout_Type (Cardio, Strength, Yoga, HIIT)
+
+    -   Cardio: 255 observations
+
+    -   Strength: 258 observations
+
+    -   Yoga: 239 observations
+
+    -   HIIT: 221 observations
+
+-   Fat_Percentage (body fat percentage)
+
+-   Water_Intake (daily water intake in liters)
+
+-   Workout_Frequency (number of workout sessions per week as days/week)
+
+-   Experience_Level (beginner 1 to expert 3)
+
+-   BMI (Body Mass Index, calculated from height and weight)
 
 ## Research Questions
 
@@ -14,7 +50,15 @@ format: html
 
 ## Data Exploration
 
-(Your text here)
+```{r}
+data <- read.csv("gym_members_exercise_tracking.csv")
+head(data)
+```
+
+```{r}
+workout_type_counts <- table(data$Workout_Type)
+workout_type_counts
+```
 
 ## Multiple Linear Regression Model
 
