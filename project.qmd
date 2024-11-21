@@ -46,7 +46,11 @@ Predictors of Interest:
 
 ## Research Questions
 
-(Your text here)
+Can Body Weight(kg) be determined by Workout Frequency, Workout Type, Calories Burned per Workout, and Session Duration of the Workout?
+
+Can the Calories Burned per Workout be predicted by the Session Duration of the Workout?
+
+Can Body Fat Percentage be predicted by Experience Level, Workout Frequency, Water Intake, and Avg BPM during the workout?
 
 ## Data Exploration
 
