@@ -46,7 +46,7 @@ Predictors of Interest:
 
 ## Research Questions
 
-**Can Body Weight(kg) be determined by Workout Frequency, Workout Type, Height, Calories Burned per Workout, Fat Percentage, and Avg BPM?**
+Can Body Weight(kg) be determined by Workout Frequency, Workout Type, Height, Calories Burned per Workout, Fat Percentage, and Avg BPM?
 
 Can the Calories Burned per Workout be predicted by the Session Duration of the Workout?
 
