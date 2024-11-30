@@ -46,7 +46,7 @@ Predictors of Interest:
 
 ## Research Questions
 
-Can Body Weight(kg) be determined by Workout Frequency, Workout Type, Height, Calories Burned per Workout, Fat Percentage, and Avg BPM?
+**Can Body Weight(kg) be determined by Workout Frequency, Workout Type, Height, Calories Burned per Workout, Fat Percentage, and Avg BPM?**
 
 Can the Calories Burned per Workout be predicted by the Session Duration of the Workout?
 
@@ -93,6 +93,7 @@ ggpairs(rq_2, lower = list(combo = "box_no_facet"))
 rq_3 <- subset(data, select = c(Fat_Percentage, Experience_Level, Workout_Frequency, Water_Intake, Avg_BPM))
 ggpairs(rq_3, lower = list(combo = "box_no_facet"))
 ```
+
 ## Multiple Linear Regression Model
 
 (Your text here)
