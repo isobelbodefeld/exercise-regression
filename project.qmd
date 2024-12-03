@@ -137,6 +137,17 @@ Linearity: Based on our residuals plot, our residuals seem to be even across 0 i
 Constant Variance: Based on our scale-location plot, the constant variance seems to hold since there doesn't seem to be a systematic deviation from the line.
 Normality: Based on our QQ plot, the normality assumption is violated because the data points do not lie on the dashed line.
 
+```{r}
+hist(log(data$Weight), xlab = "Log Body Weight")
+```
+```{r}
+log_model <- lm(log(Weight) ~  Workout_Frequency + Workout_Type + Calories_Burned + Height + Avg_BPM + Fat_Percentage, data = data)
+
+autoplot(log_model)
+
+```
+After using a log transformation of the dependent variable, we improved the normality assumption and slightly hurt the constant variance assumption.
+
 ## Formal Hypothesis Tests
 
 (Your text here)
