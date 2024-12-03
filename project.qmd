@@ -148,6 +148,18 @@ autoplot(log_model)
 ```
 After using a log transformation of the dependent variable, we improved the normality assumption and slightly hurt the constant variance assumption.
 
+Splining
+```{r}
+library(splines)
+spline_model <- lm(Weight ~  Workout_Frequency + Workout_Type + Calories_Burned + Height + bs(Avg_BPM, 3) + Fat_Percentage, data = data)
+plot(data$Avg_BPM, data$Weight)
+lines(data$Avg_BPM, predict(spline_model), col = 4, lwd = 3)
+
+autoplot(spline_model)
+summary(spline_model)
+```
+Based on our results when splining, we determined that it did not improve our model because our multiple R^2, F-statistic, and residual standard error remained the same.
+
 ## Formal Hypothesis Tests
 
 (Your text here)
