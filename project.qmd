@@ -99,7 +99,19 @@ ggpairs(rq_3, lower = list(combo = "box_no_facet"))
 model <- lm(Weight ~ Workout_Frequency + Workout_Type + Calories_Burned + Height + Avg_BPM + Fat_Percentage, data = data)
 summary(model)
 ```
-(Your text here)
+Interpreting Slopes
+
+1. Workout_Frequency(Numeric): Holding all other predictors constant, increasing workout frequency by 1 time a week will lead to a decrease in body weight by 2.978 kg.
+2. Workout_Type(Categorical): Holding all other predictors constant, doing a HIIT workout will lead to a decrease in body weight by 0.582 kg compared to doing a Cardio workout.
+Holding all other predictors constant, doing a Strength workout will lead to a decrease in body weight by 2.133 kg compared to doing a Cardio workout.
+Holding all other predictors constant, doing a Yoga workout will lead to a decrease in body weight by 2.094 kg compared to doing a Cardio workout.
+3. Calories_Burned(Numeric): Holding all other predictors constant, increasing calories burned by 1 calorie will lead to a incrase in body weight by 0.00105 kg.
+4. Height(Numeric): Holding all other predictors constant, increasing height by 1 unit will lead to an increase in body weight by 52.092 kg.
+5. Avg_BPM(Numeric): Holding all other predictors constant, increasing Avg_BPM by 1 bpm will lead to an increase in body weight by 0.0102 kg.
+6. Fat_Percentage(Numeric: Holding all other predictors constant, increasing fat percentage by 1 unit will lead to a decrease in body weight by 0.7206 kg.
+
+
+
 
 ## Improving the Model
 
