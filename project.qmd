@@ -95,7 +95,10 @@ ggpairs(rq_3, lower = list(combo = "box_no_facet"))
 ```
 
 ## Multiple Linear Regression Model
-
+```{r}
+model <- lm(Weight ~ Workout_Frequency + Workout_Type + Calories_Burned + Height + Avg_BPM + Fat_Percentage, data = data)
+summary(model)
+```
 (Your text here)
 
 ## Improving the Model
