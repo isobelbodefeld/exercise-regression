@@ -151,14 +151,25 @@ After using a log transformation of the dependent variable, we improved the norm
 Splining
 ```{r}
 library(splines)
-spline_model <- lm(Weight ~  Workout_Frequency + Workout_Type + Calories_Burned + Height + bs(Avg_BPM, 3) + Fat_Percentage, data = data)
-plot(data$Avg_BPM, data$Weight)
+spline_model <- lm(log(Weight) ~  Workout_Frequency + Workout_Type + Calories_Burned + Height + bs(Avg_BPM, 3) + Fat_Percentage, data = data)
+plot(data$Avg_BPM, log(data$Weight))
 lines(data$Avg_BPM, predict(spline_model), col = 4, lwd = 3)
 
 autoplot(spline_model)
 summary(spline_model)
 ```
 Based on our results when splining, we determined that it did not improve our model because our multiple R^2, F-statistic, and residual standard error remained the same.
+
+Interactions
+
+We hypothesize that there is an interaction between Avg BPM and Fat Percentage.
+```{r}
+interaction_model <- lm(Weight ~  Workout_Frequency + Workout_Type + Calories_Burned + Height + Avg_BPM * Fat_Percentage, data = data)
+
+summary(interaction_model)
+```
+When Avg BPM increases by 1 unit, on average the effect that increasing Fat Percentage by 1 unit has on Body Weight decreases by 0.000633 kg.
+
 
 ## Formal Hypothesis Tests
 
