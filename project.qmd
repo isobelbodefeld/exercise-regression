@@ -133,7 +133,9 @@ library(ggfortify)
 autoplot(model)
 ```
 Checking Assumptions
-Linearity: 
+Linearity: Based on our residuals plot, our residuals seem to be even across 0 indicating the linearity assumption holds.
+Constant Variance: Based on our scale-location plot, the constant variance seems to hold since there doesn't seem to be a systematic deviation from the line.
+Normality: Based on our QQ plot, the normality assumption is violated because the data points do not lie on the dashed line.
 
 ## Formal Hypothesis Tests
 
