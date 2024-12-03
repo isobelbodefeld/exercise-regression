@@ -127,8 +127,13 @@ Our residual standard error of 19.43 means that on average, our predictions are 
 
 
 ## Improving the Model
+```{r}
+library(ggfortify)
 
-(Your text here)
+autoplot(model)
+```
+Checking Assumptions
+Linearity: 
 
 ## Formal Hypothesis Tests
 
