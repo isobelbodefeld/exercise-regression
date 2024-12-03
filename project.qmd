@@ -110,6 +110,19 @@ Holding all other predictors constant, doing a Yoga workout will lead to a decre
 5. Avg_BPM(Numeric): Holding all other predictors constant, increasing Avg_BPM by 1 bpm will lead to an increase in body weight by 0.0102 kg.
 6. Fat_Percentage(Numeric: Holding all other predictors constant, increasing fat percentage by 1 unit will lead to a decrease in body weight by 0.7206 kg.
 
+F-test for Model Significance
+H0: The null hypothesis is that all of the regression coefficients are 0.
+HA: The alternative hypothesis is that at least one of the regression coefficients doesn't equal 0.
+
+Based on our F-statistic of 24.21 on 8 and 964 degrees of freedom and our p-value being less than 0.05, we can assume that we have a large F-statistic and therefore the reject the null hypothesis.
+
+Multiple R^2
+Our multiple R^2 of 0.1673 means that 16.73% of all variability in our data can be attributed to our predictors.
+
+Residual Standard Error
+Our residual standard error of 19.43 means that on average, our predictions are 19.43kg off from the actual body weight values.
+
+
 
 
 
