@@ -164,11 +164,11 @@ Interactions
 
 We hypothesize that there is an interaction between Avg BPM and Fat Percentage.
 ```{r}
-interaction_model <- lm(Weight ~  Workout_Frequency + Workout_Type + Calories_Burned + Height + Avg_BPM * Fat_Percentage, data = data)
+interaction_model <- lm(log(Weight) ~  Workout_Frequency + Workout_Type + Calories_Burned + Height + Avg_BPM * Fat_Percentage, data = data)
 
 summary(interaction_model)
 ```
-When Avg BPM increases by 1 unit, on average the effect that increasing Fat Percentage by 1 unit has on Body Weight decreases by 0.000633 kg.
+When Avg BPM increases by 1 unit, on average the effect that increasing Fat Percentage by 1 unit has on the log of Body Weight decreases by -0.00000165.
 
 
 ## Formal Hypothesis Tests
@@ -185,6 +185,28 @@ $H_1$: Calories_Burned $\neq$ 0
 Research Question 3 Hypotheses \n
 $H_0$: The reduced model that doesn't include Avg_BPM but includes everything else is correct.
 $H_1$: The reduced model that doesn't include Avg_BPM but includes everything else is incorrect.
+
+Research Question 1 Hypotheses Test
+```{r}
+summary(log_model)
+```
+Based on our F-statistic of 24.93 on 8 and 964 degrees of freedom and our p-value being less than 0.05, we can assume that we have a large F-statistic and therefore the reject the null hypothesis.
+
+
+Research Question 2 Hypotheses Test
+```{r}
+summary(log_model)
+```
+Based on our summary output, the t-statistic for Calories_Burned = 0.657, and the p-value for the t-statistic = 0.511. Because the p-value of 0.511 is greater than 0.05, we fail to reject the null hypothesis that Calories_Burned = 0.
+
+Research Question 3 Hypotheses Test
+```{r}
+library(broom)
+log_model_full <- lm(log(Weight) ~ Workout_Frequency + Workout_Type + Calories_Burned + Height + Avg_BPM + Fat_Percentage, data = data)
+log_model_reduced <- lm(log(Weight) ~ Workout_Frequency + Workout_Type + Calories_Burned + Height + Avg_BPM, data = data)
+tidy(anova(log_model_reduced, log_model_full))
+```
+
 
 ## Robustness of Results
 

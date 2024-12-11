@@ -356,46 +356,126 @@ F-statistic: 19.91 on 10 and 962 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Interactions</p>
 <p>We hypothesize that there is an interaction between Avg BPM and Fat Percentage.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>interaction_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Weight <span class="sc">~</span>  Workout_Frequency <span class="sc">+</span> Workout_Type <span class="sc">+</span> Calories_Burned <span class="sc">+</span> Height <span class="sc">+</span> Avg_BPM <span class="sc">*</span> Fat_Percentage, <span class="at">data =</span> data)</span>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>interaction_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(Weight) <span class="sc">~</span>  Workout_Frequency <span class="sc">+</span> Workout_Type <span class="sc">+</span> Calories_Burned <span class="sc">+</span> Height <span class="sc">+</span> Avg_BPM <span class="sc">*</span> Fat_Percentage, <span class="at">data =</span> data)</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(interaction_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-lm(formula = Weight ~ Workout_Frequency + Workout_Type + Calories_Burned + 
-    Height + Avg_BPM * Fat_Percentage, data = data)
+lm(formula = log(Weight) ~ Workout_Frequency + Workout_Type + 
+    Calories_Burned + Height + Avg_BPM * Fat_Percentage, data = data)
 
 Residuals:
-    Min      1Q  Median      3Q     Max 
--41.530 -13.517  -2.468  10.158  61.265 
+     Min       1Q   Median       3Q      Max 
+-0.63548 -0.17118 -0.00572  0.16115  0.67701 
 
 Coefficients:
                          Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)             8.5608367 28.3885079   0.302  0.76305    
-Workout_Frequency      -2.9741492  0.9068326  -3.280  0.00108 ** 
-Workout_TypeHIIT       -0.5879521  1.7915938  -0.328  0.74285    
-Workout_TypeStrength   -2.1334791  1.7205186  -1.240  0.21527    
-Workout_TypeYoga       -2.0980241  1.7552208  -1.195  0.23226    
-Calories_Burned         0.0010276  0.0034829   0.295  0.76801    
-Height                 52.0700655  5.1093946  10.191  &lt; 2e-16 ***
-Avg_BPM                 0.0262212  0.1864045   0.141  0.88816    
-Fat_Percentage         -0.6300185  1.0265519  -0.614  0.53954    
-Avg_BPM:Fat_Percentage -0.0006327  0.0071021  -0.089  0.92903    
+(Intercept)             3.472e+00  3.709e-01   9.362  &lt; 2e-16 ***
+Workout_Frequency      -3.361e-02  1.185e-02  -2.837  0.00465 ** 
+Workout_TypeHIIT       -1.056e-02  2.341e-02  -0.451  0.65198    
+Workout_TypeStrength   -3.165e-02  2.248e-02  -1.408  0.15949    
+Workout_TypeYoga       -3.205e-02  2.293e-02  -1.398  0.16255    
+Calories_Burned         2.971e-05  4.550e-05   0.653  0.51387    
+Height                  6.673e-01  6.675e-02   9.996  &lt; 2e-16 ***
+Avg_BPM                -4.946e-05  2.435e-03  -0.020  0.98380    
+Fat_Percentage         -9.693e-03  1.341e-02  -0.723  0.46999    
+Avg_BPM:Fat_Percentage -1.650e-06  9.278e-05  -0.018  0.98581    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 19.44 on 963 degrees of freedom
-Multiple R-squared:  0.1673,    Adjusted R-squared:  0.1595 
-F-statistic:  21.5 on 9 and 963 DF,  p-value: &lt; 2.2e-16</code></pre>
+Residual standard error: 0.254 on 963 degrees of freedom
+Multiple R-squared:  0.1714,    Adjusted R-squared:  0.1637 
+F-statistic: 22.14 on 9 and 963 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
-<p>When Avg BPM increases by 1 unit, on average the effect that increasing Fat Percentage by 1 unit has on Body Weight decreases by 0.000633 kg.</p>
+<p>When Avg BPM increases by 1 unit, on average the effect that increasing Fat Percentage by 1 unit has on the log of Body Weight decreases by -0.00000165.</p>
 </section>
 <section id="formal-hypothesis-tests" class="level2">
 <h2 class="anchored" data-anchor-id="formal-hypothesis-tests">Formal Hypothesis Tests</h2>
 <p>(Your text here) Research Question 1 Hypotheses <span class="math inline">\(H_0\)</span>: Workout_Frequency = 0, Workout_Type = 0, Calories_Burned = 0, Height = 0, Avg_BPM = 0, Fat_Percentage = 0. <span class="math inline">\(H_1\)</span>: At least one of the regression coefficients above does not equal 0.</p>
 <p>Research Question 2 Hypotheses <span class="math inline">\(H_0\)</span>: Calories_Burned = 0 <span class="math inline">\(H_1\)</span>: Calories_Burned <span class="math inline">\(\neq\)</span> 0</p>
 <p>Research Question 3 Hypotheses <span class="math inline">\(H_0\)</span>: The reduced model that doesn’t include Avg_BPM but includes everything else is correct. <span class="math inline">\(H_1\)</span>: The reduced model that doesn’t include Avg_BPM but includes everything else is incorrect.</p>
+<p>Research Question 1 Hypotheses Test</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(log_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(Weight) ~ Workout_Frequency + Workout_Type + 
+    Calories_Burned + Height + Avg_BPM + Fat_Percentage, data = data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.63551 -0.17145 -0.00598  0.16117  0.67717 
+
+Coefficients:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)           3.478e+00  1.709e-01  20.353  &lt; 2e-16 ***
+Workout_Frequency    -3.362e-02  1.183e-02  -2.842  0.00458 ** 
+Workout_TypeHIIT     -1.055e-02  2.338e-02  -0.451  0.65206    
+Workout_TypeStrength -3.164e-02  2.247e-02  -1.409  0.15929    
+Workout_TypeYoga     -3.204e-02  2.291e-02  -1.398  0.16234    
+Calories_Burned       2.978e-05  4.532e-05   0.657  0.51118    
+Height                6.673e-01  6.664e-02  10.014  &lt; 2e-16 ***
+Avg_BPM              -9.125e-05  6.392e-04  -0.143  0.88652    
+Fat_Percentage       -9.930e-03  1.796e-03  -5.529 4.14e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.2539 on 964 degrees of freedom
+Multiple R-squared:  0.1714,    Adjusted R-squared:  0.1645 
+F-statistic: 24.93 on 8 and 964 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Based on our F-statistic of 24.93 on 8 and 964 degrees of freedom and our p-value being less than 0.05, we can assume that we have a large F-statistic and therefore the reject the null hypothesis.</p>
+<p>Research Question 2 Hypotheses Test</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(log_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(Weight) ~ Workout_Frequency + Workout_Type + 
+    Calories_Burned + Height + Avg_BPM + Fat_Percentage, data = data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.63551 -0.17145 -0.00598  0.16117  0.67717 
+
+Coefficients:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)           3.478e+00  1.709e-01  20.353  &lt; 2e-16 ***
+Workout_Frequency    -3.362e-02  1.183e-02  -2.842  0.00458 ** 
+Workout_TypeHIIT     -1.055e-02  2.338e-02  -0.451  0.65206    
+Workout_TypeStrength -3.164e-02  2.247e-02  -1.409  0.15929    
+Workout_TypeYoga     -3.204e-02  2.291e-02  -1.398  0.16234    
+Calories_Burned       2.978e-05  4.532e-05   0.657  0.51118    
+Height                6.673e-01  6.664e-02  10.014  &lt; 2e-16 ***
+Avg_BPM              -9.125e-05  6.392e-04  -0.143  0.88652    
+Fat_Percentage       -9.930e-03  1.796e-03  -5.529 4.14e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.2539 on 964 degrees of freedom
+Multiple R-squared:  0.1714,    Adjusted R-squared:  0.1645 
+F-statistic: 24.93 on 8 and 964 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Based on our summary output, the t-statistic for Calories_Burned = 0.657, and the p-value for the t-statistic = 0.511. Because the p-value of 0.511 is greater than 0.05, we fail to reject the null hypothesis that Calories_Burned = 0.</p>
+<p>Research Question 3 Hypotheses Test</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>log_model_full <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(Weight) <span class="sc">~</span> Workout_Frequency <span class="sc">+</span> Workout_Type <span class="sc">+</span> Calories_Burned <span class="sc">+</span> Height <span class="sc">+</span> Avg_BPM <span class="sc">+</span> Fat_Percentage, <span class="at">data =</span> data)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>log_model_reduced <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(Weight) <span class="sc">~</span> Workout_Frequency <span class="sc">+</span> Workout_Type <span class="sc">+</span> Calories_Burned <span class="sc">+</span> Height <span class="sc">+</span> Avg_BPM, <span class="at">data =</span> data)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(<span class="fu">anova</span>(log_model_reduced, log_model_full))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 7
+  term                          df.residual   rss    df sumsq statistic  p.value
+  &lt;chr&gt;                               &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 log(Weight) ~ Workout_Freque…         965  64.1    NA NA         NA   NA      
+2 log(Weight) ~ Workout_Freque…         964  62.1     1  1.97      30.6  4.14e-8</code></pre>
+</div>
+</div>
 </section>
 <section id="robustness-of-results" class="level2">
 <h2 class="anchored" data-anchor-id="robustness-of-results">Robustness of Results</h2>
