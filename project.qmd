@@ -206,7 +206,7 @@ log_model_full <- lm(log(Weight) ~ Workout_Frequency + Workout_Type + Calories_B
 log_model_reduced <- lm(log(Weight) ~ Workout_Frequency + Workout_Type + Calories_Burned + Height + Avg_BPM, data = data)
 tidy(anova(log_model_reduced, log_model_full))
 ```
-
+According to our anova results, our F-statistic of30.571 has a p-value less than 0.05 which indicates that we reject the null hypothesis of the reduced model being correct.
 
 ## Robustness of Results
 
