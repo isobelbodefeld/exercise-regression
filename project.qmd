@@ -48,9 +48,9 @@ Predictors of Interest:
 
 Can Body Weight(kg) be determined by Workout Frequency, Workout Type, Height, Calories Burned per Workout, Fat Percentage, and Avg BPM?
 
-Can the Calories Burned per Workout be predicted by the Session Duration of the Workout?
+Does Calories Burned per Workout have an effect on predicting Body Weight(kg) when holding all other predictors constant?
 
-Can Body Fat Percentage be predicted by Experience Level, Workout Frequency, Water Intake, and Avg BPM during the workout?
+Can Body Weight(kg) be predicted as effectively when excluding Avg BPM and only predicting by Workout Frequency, Workout Type, Height, Calories Burned per Workout, and Fat Percentage?
 
 ## Data Exploration
 
@@ -116,11 +116,11 @@ HA: The alternative hypothesis is that at least one of the regression coefficien
 
 Based on our F-statistic of 24.21 on 8 and 964 degrees of freedom and our p-value being less than 0.05, we can assume that we have a large F-statistic and therefore the reject the null hypothesis.
 
-Multiple R^2
-Our multiple R^2 of 0.1673 means that 16.73% of all variability in our data can be attributed to our predictors.
+Multiple $R^2$
+Our multiple $R^2$ of 0.1673 means that 16.73% of all variability in our data can be attributed to our predictors.
 
 Residual Standard Error
-Our residual standard error of 19.43 means that on average, our predictions are 19.43kg off from the actual body weight values.
+Our residual standard error of 19.43 means that on average, our predictions are 19.43 kg off from the actual body weight values.
 
 
 
@@ -174,6 +174,17 @@ When Avg BPM increases by 1 unit, on average the effect that increasing Fat Perc
 ## Formal Hypothesis Tests
 
 (Your text here)
+Research Question 1 Hypotheses \n
+$H_0$: Workout_Frequency = 0, Workout_Type = 0, Calories_Burned = 0, Height = 0, Avg_BPM = 0, Fat_Percentage = 0.
+$H_1$: At least one of the regression coefficients above does not equal 0.
+
+Research Question 2 Hypotheses \n
+$H_0$: Calories_Burned = 0
+$H_1$: Calories_Burned $\neq$ 0
+
+Research Question 3 Hypotheses \n
+$H_0$: The reduced model that doesn't include Avg_BPM but includes everything else is correct.
+$H_1$: The reduced model that doesn't include Avg_BPM but includes everything else is incorrect.
 
 ## Robustness of Results
 

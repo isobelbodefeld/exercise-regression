@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Isobel Bodefeld, Michael Tao, Wei-jet Chiew">
+
+<title>Predicting Weight from Fitness Patterns</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="project_files/libs/clipboard/clipboard.min.js"></script>
+<script src="project_files/libs/quarto-html/quarto.js"></script>
+<script src="project_files/libs/quarto-html/popper.min.js"></script>
+<script src="project_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="project_files/libs/quarto-html/anchor.min.js"></script>
+<link href="project_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="project_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="project_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="project_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="project_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Predicting Weight from Fitness Patterns</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Isobel Bodefeld, Michael Tao, Wei-jet Chiew </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>We found our data on Kaggle from the author Vala Khorasani. According to Khorasani, this dataset was generated using simulated data based on “realistic gym exercise patterns.” With 973 observations, this data is related to key performance indicators such as heart rate and calories burned along with information relating to demographics and experience levels.</p>
+<p>Outcome to predict: Weight (in kilograms)</p>
+<p>Predictors of Interest:</p>
+<ul>
+<li><p>Age (in years)</p></li>
+<li><p>Gender (Male or Female)</p></li>
+<li><p>Height (in meters)</p></li>
+<li><p>Avg_BPM (beats per minute during workout sessions)</p></li>
+<li><p>Session_Duration (duration of each workout session in hours)</p></li>
+<li><p>Calories_Burned (total calories burned during each session)</p></li>
+<li><p>Workout_Type (Cardio, Strength, Yoga, HIIT)</p>
+<ul>
+<li><p>Cardio: 255 observations</p></li>
+<li><p>Strength: 258 observations</p></li>
+<li><p>Yoga: 239 observations</p></li>
+<li><p>HIIT: 221 observations</p></li>
+</ul></li>
+<li><p>Fat_Percentage (body fat percentage)</p></li>
+<li><p>Water_Intake (daily water intake in liters)</p></li>
+<li><p>Workout_Frequency (number of workout sessions per week as days/week)</p></li>
+<li><p>Experience_Level (beginner 1 to expert 3)</p></li>
+<li><p>BMI (Body Mass Index, calculated from height and weight)</p></li>
+</ul>
+</section>
+<section id="research-questions" class="level2">
+<h2 class="anchored" data-anchor-id="research-questions">Research Questions</h2>
+<p>Can Body Weight(kg) be determined by Workout Frequency, Workout Type, Height, Calories Burned per Workout, Fat Percentage, and Avg BPM?</p>
+<p>Does Calories Burned per Workout have an effect on predicting Body Weight(kg) when holding all other predictors constant?</p>
+<p>Can Body Weight(kg) be predicted as effectively when excluding Avg BPM and only predicting by Workout Frequency, Workout Type, Height, Calories Burned per Workout, and Fat Percentage?</p>
+</section>
+<section id="data-exploration" class="level2">
+<h2 class="anchored" data-anchor-id="data-exploration">Data Exploration</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"gym_members_exercise_tracking.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Age Gender Weight Height Max_BPM Avg_BPM Resting_BPM Session_Duration
+1  56   Male   88.3   1.71     180     157          60             1.69
+2  46 Female   74.9   1.53     179     151          66             1.30
+3  32 Female   68.1   1.66     167     122          54             1.11
+4  25   Male   53.2   1.70     190     164          56             0.59
+5  38   Male   46.1   1.79     188     158          68             0.64
+6  56 Female   58.0   1.68     168     156          74             1.59
+  Calories_Burned Workout_Type Fat_Percentage Water_Intake Workout_Frequency
+1            1313         Yoga           12.6          3.5                 4
+2             883         HIIT           33.9          2.1                 4
+3             677       Cardio           33.4          2.3                 4
+4             532     Strength           28.8          2.1                 3
+5             556     Strength           29.2          2.8                 3
+6            1116         HIIT           15.5          2.7                 5
+  Experience_Level   BMI
+1                3 30.20
+2                2 32.00
+3                2 24.71
+4                1 18.41
+5                1 14.39
+6                3 20.55</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>workout_type_counts <span class="ot">&lt;-</span> <span class="fu">table</span>(data<span class="sc">$</span>Workout_Type)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>workout_type_counts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  Cardio     HIIT Strength     Yoga 
+     255      221      258      239 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizing Research Question 1</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ggplot2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'GGally':
+  method from   
+  +.gg   ggplot2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>rq_1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(data, <span class="at">select =</span> <span class="fu">c</span>(Weight, Workout_Frequency, Workout_Type, Calories_Burned, Height, Avg_BPM, Fat_Percentage))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(rq_1, <span class="at">lower =</span> <span class="fu">list</span>(<span class="at">combo =</span> <span class="st">"box_no_facet"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(data<span class="sc">$</span>Weight <span class="sc">~</span> data<span class="sc">$</span>Workout_Frequency)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(data<span class="sc">$</span>Weight <span class="sc">~</span> data<span class="sc">$</span>Workout_Type)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data<span class="sc">$</span>Calories_Burned, data<span class="sc">$</span>Weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-3-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data<span class="sc">$</span>Height, data<span class="sc">$</span>Weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-3-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data<span class="sc">$</span>Avg_BPM, data<span class="sc">$</span>Weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-3-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data<span class="sc">$</span>Fat_Percentage, data<span class="sc">$</span>Weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-3-7.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>From the visualizations, it seems that Height is the most highly correlated with Body Weight with a slightly positive relationship. Taller individuals tend to have larger skeletal frames and more body mass in general, which naturally contributes to a higher weight.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizing Research Question 2</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>rq_2 <span class="ot">&lt;-</span> <span class="fu">subset</span>(data, <span class="at">select =</span> <span class="fu">c</span>(Calories_Burned, Session_Duration))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(rq_2, <span class="at">lower =</span> <span class="fu">list</span>(<span class="at">combo =</span> <span class="st">"box_no_facet"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizing Research Question 3</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>rq_3 <span class="ot">&lt;-</span> <span class="fu">subset</span>(data, <span class="at">select =</span> <span class="fu">c</span>(Fat_Percentage, Experience_Level, Workout_Frequency, Water_Intake, Avg_BPM))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(rq_3, <span class="at">lower =</span> <span class="fu">list</span>(<span class="at">combo =</span> <span class="st">"box_no_facet"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="multiple-linear-regression-model" class="level2">
+<h2 class="anchored" data-anchor-id="multiple-linear-regression-model">Multiple Linear Regression Model</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Weight <span class="sc">~</span> Workout_Frequency <span class="sc">+</span> Workout_Type <span class="sc">+</span> Calories_Burned <span class="sc">+</span> Height <span class="sc">+</span> Avg_BPM <span class="sc">+</span> Fat_Percentage, <span class="at">data =</span> data)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Weight ~ Workout_Frequency + Workout_Type + Calories_Burned + 
+    Height + Avg_BPM + Fat_Percentage, data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-41.537 -13.504  -2.458  10.171  61.328 
+
+Coefficients:
+                      Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)          10.805160  13.080327   0.826  0.40897    
+Workout_Frequency    -2.977792   0.905444  -3.289  0.00104 ** 
+Workout_TypeHIIT     -0.582501   1.789627  -0.325  0.74488    
+Workout_TypeStrength -2.132764   1.719614  -1.240  0.21518    
+Workout_TypeYoga     -2.094133   1.753774  -1.194  0.23274    
+Calories_Burned       0.001054   0.003469   0.304  0.76135    
+Height               52.091807   5.100936  10.212  &lt; 2e-16 ***
+Avg_BPM               0.010198   0.048931   0.208  0.83495    
+Fat_Percentage       -0.720648   0.137468  -5.242 1.95e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 19.43 on 964 degrees of freedom
+Multiple R-squared:  0.1673,    Adjusted R-squared:  0.1604 
+F-statistic: 24.21 on 8 and 964 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Interpreting Slopes</p>
+<ol type="1">
+<li>Workout_Frequency(Numeric): Holding all other predictors constant, increasing workout frequency by 1 time a week will lead to a decrease in body weight by 2.978 kg.</li>
+<li>Workout_Type(Categorical): Holding all other predictors constant, doing a HIIT workout will lead to a decrease in body weight by 0.582 kg compared to doing a Cardio workout. Holding all other predictors constant, doing a Strength workout will lead to a decrease in body weight by 2.133 kg compared to doing a Cardio workout. Holding all other predictors constant, doing a Yoga workout will lead to a decrease in body weight by 2.094 kg compared to doing a Cardio workout.</li>
+<li>Calories_Burned(Numeric): Holding all other predictors constant, increasing calories burned by 1 calorie will lead to a incrase in body weight by 0.00105 kg.</li>
+<li>Height(Numeric): Holding all other predictors constant, increasing height by 1 unit will lead to an increase in body weight by 52.092 kg.</li>
+<li>Avg_BPM(Numeric): Holding all other predictors constant, increasing Avg_BPM by 1 bpm will lead to an increase in body weight by 0.0102 kg.</li>
+<li>Fat_Percentage(Numeric: Holding all other predictors constant, increasing fat percentage by 1 unit will lead to a decrease in body weight by 0.7206 kg.</li>
+</ol>
+<p>F-test for Model Significance H0: The null hypothesis is that all of the regression coefficients are 0. HA: The alternative hypothesis is that at least one of the regression coefficients doesn’t equal 0.</p>
+<p>Based on our F-statistic of 24.21 on 8 and 964 degrees of freedom and our p-value being less than 0.05, we can assume that we have a large F-statistic and therefore the reject the null hypothesis.</p>
+<p>Multiple <span class="math inline">\(R^2\)</span> Our multiple <span class="math inline">\(R^2\)</span> of 0.1673 means that 16.73% of all variability in our data can be attributed to our predictors.</p>
+<p>Residual Standard Error Our residual standard error of 19.43 means that on average, our predictions are 19.43 kg off from the actual body weight values.</p>
+</section>
+<section id="improving-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="improving-the-model">Improving the Model</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggfortify)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Checking Assumptions Linearity: Based on our residuals plot, our residuals seem to be even across 0 indicating the linearity assumption holds. Constant Variance: Based on our scale-location plot, the constant variance seems to hold since there doesn’t seem to be a systematic deviation from the line. Normality: Based on our QQ plot, the normality assumption is violated because the data points do not lie on the dashed line.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log</span>(data<span class="sc">$</span>Weight), <span class="at">xlab =</span> <span class="st">"Log Body Weight"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>log_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(Weight) <span class="sc">~</span>  Workout_Frequency <span class="sc">+</span> Workout_Type <span class="sc">+</span> Calories_Burned <span class="sc">+</span> Height <span class="sc">+</span> Avg_BPM <span class="sc">+</span> Fat_Percentage, <span class="at">data =</span> data)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(log_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>After using a log transformation of the dependent variable, we improved the normality assumption and slightly hurt the constant variance assumption.</p>
+<p>Splining</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>spline_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(Weight) <span class="sc">~</span>  Workout_Frequency <span class="sc">+</span> Workout_Type <span class="sc">+</span> Calories_Burned <span class="sc">+</span> Height <span class="sc">+</span> <span class="fu">bs</span>(Avg_BPM, <span class="dv">3</span>) <span class="sc">+</span> Fat_Percentage, <span class="at">data =</span> data)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(data<span class="sc">$</span>Avg_BPM, <span class="fu">log</span>(data<span class="sc">$</span>Weight))</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(data<span class="sc">$</span>Avg_BPM, <span class="fu">predict</span>(spline_model), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(spline_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="project_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(spline_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(Weight) ~ Workout_Frequency + Workout_Type + 
+    Calories_Burned + Height + bs(Avg_BPM, 3) + Fat_Percentage, 
+    data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.6346 -0.1718 -0.0064  0.1610  0.6756 
+
+Coefficients:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)           3.463e+00  1.559e-01  22.212  &lt; 2e-16 ***
+Workout_Frequency    -3.352e-02  1.190e-02  -2.817  0.00494 ** 
+Workout_TypeHIIT     -1.063e-02  2.342e-02  -0.454  0.64986    
+Workout_TypeStrength -3.162e-02  2.254e-02  -1.403  0.16095    
+Workout_TypeYoga     -3.213e-02  2.295e-02  -1.400  0.16175    
+Calories_Burned       3.002e-05  4.542e-05   0.661  0.50884    
+Height                6.674e-01  6.680e-02   9.990  &lt; 2e-16 ***
+bs(Avg_BPM, 3)1       9.131e-03  8.633e-02   0.106  0.91578    
+bs(Avg_BPM, 3)2      -9.421e-03  5.990e-02  -0.157  0.87507    
+bs(Avg_BPM, 3)3       9.091e-04  4.953e-02   0.018  0.98536    
+Fat_Percentage       -9.908e-03  1.805e-03  -5.489 5.16e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.2541 on 962 degrees of freedom
+Multiple R-squared:  0.1714,    Adjusted R-squared:  0.1628 
+F-statistic: 19.91 on 10 and 962 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Based on our results when splining, we determined that it did not improve our model because our multiple R^2, F-statistic, and residual standard error remained the same.</p>
+<p>Interactions</p>
+<p>We hypothesize that there is an interaction between Avg BPM and Fat Percentage.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>interaction_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Weight <span class="sc">~</span>  Workout_Frequency <span class="sc">+</span> Workout_Type <span class="sc">+</span> Calories_Burned <span class="sc">+</span> Height <span class="sc">+</span> Avg_BPM <span class="sc">*</span> Fat_Percentage, <span class="at">data =</span> data)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(interaction_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Weight ~ Workout_Frequency + Workout_Type + Calories_Burned + 
+    Height + Avg_BPM * Fat_Percentage, data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-41.530 -13.517  -2.468  10.158  61.265 
+
+Coefficients:
+                         Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)             8.5608367 28.3885079   0.302  0.76305    
+Workout_Frequency      -2.9741492  0.9068326  -3.280  0.00108 ** 
+Workout_TypeHIIT       -0.5879521  1.7915938  -0.328  0.74285    
+Workout_TypeStrength   -2.1334791  1.7205186  -1.240  0.21527    
+Workout_TypeYoga       -2.0980241  1.7552208  -1.195  0.23226    
+Calories_Burned         0.0010276  0.0034829   0.295  0.76801    
+Height                 52.0700655  5.1093946  10.191  &lt; 2e-16 ***
+Avg_BPM                 0.0262212  0.1864045   0.141  0.88816    
+Fat_Percentage         -0.6300185  1.0265519  -0.614  0.53954    
+Avg_BPM:Fat_Percentage -0.0006327  0.0071021  -0.089  0.92903    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 19.44 on 963 degrees of freedom
+Multiple R-squared:  0.1673,    Adjusted R-squared:  0.1595 
+F-statistic:  21.5 on 9 and 963 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>When Avg BPM increases by 1 unit, on average the effect that increasing Fat Percentage by 1 unit has on Body Weight decreases by 0.000633 kg.</p>
+</section>
+<section id="formal-hypothesis-tests" class="level2">
+<h2 class="anchored" data-anchor-id="formal-hypothesis-tests">Formal Hypothesis Tests</h2>
+<p>(Your text here) Research Question 1 Hypotheses <span class="math inline">\(H_0\)</span>: Workout_Frequency = 0, Workout_Type = 0, Calories_Burned = 0, Height = 0, Avg_BPM = 0, Fat_Percentage = 0. <span class="math inline">\(H_1\)</span>: At least one of the regression coefficients above does not equal 0.</p>
+<p>Research Question 2 Hypotheses <span class="math inline">\(H_0\)</span>: Calories_Burned = 0 <span class="math inline">\(H_1\)</span>: Calories_Burned <span class="math inline">\(\neq\)</span> 0</p>
+<p>Research Question 3 Hypotheses <span class="math inline">\(H_0\)</span>: The reduced model that doesn’t include Avg_BPM but includes everything else is correct. <span class="math inline">\(H_1\)</span>: The reduced model that doesn’t include Avg_BPM but includes everything else is incorrect.</p>
+</section>
+<section id="robustness-of-results" class="level2">
+<h2 class="anchored" data-anchor-id="robustness-of-results">Robustness of Results</h2>
+<p>(Your text here)</p>
+</section>
+<section id="conclusions" class="level2">
+<h2 class="anchored" data-anchor-id="conclusions">Conclusions</h2>
+<p>(Your text here)</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
